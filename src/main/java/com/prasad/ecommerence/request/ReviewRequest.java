@@ -1,4 +1,4 @@
-package com.prasad.ecommerence.service;
+package com.prasad.ecommerence.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

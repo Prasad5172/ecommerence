@@ -3,6 +3,8 @@ package com.prasad.ecommerence.controller;
 import java.net.http.HttpRequest;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,16 +20,18 @@ import com.prasad.ecommerence.service.UserService;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 @AllArgsConstructor
 public class UserController {
     
     private final UserService userService;
     private final CartService cartService;
 
-    @GetMapping("users/profile")
-    public User getUserProfile(@RequestHeader("Authorization") String authorizationHeader) throws UserException{
+    @GetMapping("/profile")
+    public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String authorizationHeader) throws UserException{
         User user = userService.findUserProfileByJwt(authorizationHeader);
-        return user;
+        return new ResponseEntity<>(user,HttpStatus.ACCEPTED);
     }
+
+    
 }

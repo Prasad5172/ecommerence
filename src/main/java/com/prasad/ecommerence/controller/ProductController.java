@@ -1,6 +1,7 @@
 package com.prasad.ecommerence.controller;
 
 import java.util.List;
+import java.lang.String;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,13 @@ import com.prasad.ecommerence.service.ProductService;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/products")
 @AllArgsConstructor
 public class ProductController {
     
     private final ProductService productService;
 
-    @GetMapping("/products")
+    @GetMapping
     public ResponseEntity<Page<Product>> findProductsByCategoryHandler(
             @RequestParam String category, @RequestParam List<String> color,
             @RequestParam List<String> size, @RequestParam Integer minPrice,
@@ -37,7 +38,7 @@ public class ProductController {
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/products/id/{productId}")
+    @GetMapping("/id/{productId}")
     public ResponseEntity<Product> findProductByIdHandler(@PathVariable("productId") Long productId) throws ProductException {
         Product product = productService.findProductById(productId);
         return new ResponseEntity<>(product, HttpStatus.ACCEPTED);

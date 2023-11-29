@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class AddItemRequest {
-    private Long productid;
+    private Long productId;
     private String size;
     private int quantity;
-    private Integer price;
 }

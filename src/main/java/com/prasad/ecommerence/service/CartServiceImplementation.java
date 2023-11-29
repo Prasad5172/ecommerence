@@ -32,23 +32,31 @@ public class CartServiceImplementation implements CartService{
     }
     @Override
     public String addCartItem(Long userId, AddItemRequest req) throws ProductException {
-        Cart cart =findUserCart(userId);
-        Product product = productService.findProductById(req.getProductid());
-        List<CartItem> isCartItemPresent = cart.getCartItems().stream().filter(c-> c.getProduct().getId()== req.getProductid()).collect(Collectors.toList());
-        if(isCartItemPresent.isEmpty()){
+
+
+        System.out.println("addCartItem");
+        Cart cart = findUserCart(userId);
+        Product product = productService.findProductById(req.getProductId());
+        // Check if the cart item already exists
+        CartItem existingCartItem = cartItemService.isCartItemExist(cart, product, req.getSize(), userId);
+        if (existingCartItem == null) {
+            System.out.println("CartItem is not present");
             CartItem cartItem = new CartItem();
             cartItem.setProduct(product);
             cartItem.setSize(req.getSize());
-            cartItem.setCart(cart);
+            cartItem.setCart(cart); // Set the Cart to the CartItem
             cartItem.setQuantity(req.getQuantity());
-            cartItem.setPrice(req.getPrice());
+            cartItem.setPrice(product.getPrice() * req.getQuantity());
             cartItem.setUserId(userId);
-            cartItem.setPrice(req.getPrice()*product.getDiscountedPrice());
-            CartItem cartItem2 = cartItemService.createCartItem(cartItem);
-            cart.getCartItems().add(cartItem2);
+            // Persist the new CartItem
+            CartItem createdCartItem = cartItemService.createCartItem(cartItem);
+            // Add the created CartItem to the user's Cart
+            cart.getCartItems().add(createdCartItem);
+            // Save or update the Cart in the database
+            cartRepository.save(cart);
+            System.out.println("Cart and CartItem added to the database");
         }
         return "Item added to cart";
-
     }
     @Override
     public Cart findUserCart(Long userId) {
@@ -65,7 +73,7 @@ public class CartServiceImplementation implements CartService{
         cart.setTotalItem(totalItems);
         cart.setTotalDiscountPrice(totalDiscountedPrice);
         cart.setDiscount(totalPrice-totalDiscountedPrice);
-        return cartRepository.save(cart);
+        return cart;
 
     }
 

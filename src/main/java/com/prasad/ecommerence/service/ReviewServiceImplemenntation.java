@@ -11,6 +11,7 @@ import com.prasad.ecommerence.model.Review;
 import com.prasad.ecommerence.model.User;
 import com.prasad.ecommerence.repository.ProductRepository;
 import com.prasad.ecommerence.repository.ReviewRepository;
+import com.prasad.ecommerence.request.ReviewRequest;
 
 import lombok.AllArgsConstructor;
 

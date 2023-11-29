@@ -1,5 +1,7 @@
 package com.prasad.ecommerence.controller;
 
+import java.time.LocalDateTime;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,17 +50,17 @@ public class AuthController {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .password(passwordEncoder.encode(user.getPassword()))
+                .localDateTime(LocalDateTime.now())
                 .build();
         saveUser = userRepository.save(saveUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(saveUser.getEmail(),
                 saveUser.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        if(authentication.isAuthenticated()){
-                    Cart cart =cartService.createCart(user);
-        }
+        Cart cart =cartService.createCart(saveUser);
         String token = jwtUtils.generateToken(saveUser);
         return ResponseEntity.ok(JwtResponce.builder().accesstoken(token).message("saved user").build());
     }
+
 
     @PostMapping("signin")
     public ResponseEntity<JwtResponce> login(@RequestBody LoginRequest loginRequest) {

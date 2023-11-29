@@ -9,11 +9,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import com.prasad.ecommerence.model.User;
-import com.prasad.ecommerence.repository.UserRepository;
 import com.prasad.ecommerence.service.CustomUserServiceImplementation;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,14 +28,7 @@ public class JwtAthFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtils jwtUtils;
-    @Autowired
-    private UserRepository userRepository;
-
-    // @Autowired
-    // private TokenRepository tokenRepository;
-    
    
-
     public JwtAthFilter(HandlerExceptionResolver exceptionResolver) {
         this.exceptionResolver = exceptionResolver;
     }
@@ -66,7 +56,7 @@ public class JwtAthFilter extends OncePerRequestFilter {
 
             if (userEmail != null) {
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                    System.out.println("securityContext is null in dofilter method");
+                    // System.out.println("securityContext is null in dofilter method");
                     UserDetails userDetails = customUserServiceImplementation.loadUserByUsername(userEmail);
                     // var userTokenFromDB = tokenRepository.findByToken(jwtToken);
                     // System.out.println(userTokenFromDB);
@@ -89,7 +79,7 @@ public class JwtAthFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response);
-            System.out.println("endOfFilterChain");
+            // System.out.println("endOfFilterChain");
         } catch (Exception ex) {
             System.out.println("exception");
             SecurityContextHolder.clearContext();

@@ -3,6 +3,8 @@ package com.prasad.ecommerence.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,10 +16,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Cart {
@@ -29,9 +34,9 @@ public class Cart {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Column(name = "cart_items")
-    private Set<CartItem> cartItems = new HashSet<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private Set<CartItem> cartItems = new HashSet<>(); // Initialize the set
 
     @Column(name = "total_price")
     private double totalPrice;
@@ -40,7 +45,6 @@ public class Cart {
     private int totalItem;
 
     private int totalDiscountPrice;
-
     private int discount;
-
 }
+
